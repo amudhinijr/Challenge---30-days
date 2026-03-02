@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <title>My Expense Tracker</title>
+
+  <style>
+    /* Page style */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f5f7fa;
+      padding: 30px;
+      text-align: center;
+    }
+
+    /* Main box */
+    .container {
+      background:white;
+      width: 320px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    /* Inputs */
+    input {
+      width: 90%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    /* Button */
+    button {
+      width: 95%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Output area */
+    #output {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .highlight {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Daily Expense</h2>
+
+    <input type="text" id="desc" placeholder="Enter item name">
+    <input type="number" id="amount" placeholder="Enter amount">
+
+    <button onclick="addExpense()">Add Expense</button>
+
+    <div id="output"></div>
+    <h3 id="total"></h3>
+    <h3 id="max"></h3>
+  </div>
+
+  <!-- JS link -->
+  <script src="./app.js"></script>
+
+</body>
+</html>
