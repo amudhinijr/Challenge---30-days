@@ -1,12 +1,9 @@
 // Day 1 - Expense Manager
-
-
 let expenses = [];
 
 function addExpense(amount, category) {
   expenses.push({ amount, category });
 }
-
 
 function removeExpense(index) {
   if (index >= 0 && index < expenses.length) {
@@ -16,11 +13,9 @@ function removeExpense(index) {
   }
 }
 
-
 function getTotal() {
   return expenses.reduce((sum, exp) => sum + exp.amount, 0);
 }
-
 
 function getMax() {
   if (expenses.length === 0) return null;

@@ -1,87 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
-  <title>My Expense Tracker</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Manager</title>
   <style>
-    /* Page style */
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f5f7fa;
-      padding: 30px;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
-
-    /* Main box */
-    .container {
-      background:white;
-      width: 320px;
-      margin: auto;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
     h2 {
-      margin-bottom: 15px;
+      color: #333;
     }
-
-    /* Inputs */
-    input {
-      width: 90%;
+    input, button {
+      margin: 5px;
       padding: 8px;
-      margin: 6px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
     }
-
-    /* Button */
-    button {
-      width: 95%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    /* Output area */
-    #output {
+    #expense-list {
       margin-top: 20px;
-      text-align: left;
     }
-
-    .highlight {
+    .expense-item {
+      margin: 5px 0;
+    }
+    .highest {
       color: red;
       font-weight: bold;
     }
   </style>
 </head>
-
 <body>
+  <h2>Expense Manager</h2>
 
-  <div class="container">
-    <h2>Daily Expense</h2>
+  <label>Amount:</label>
+  <input type="number" id="amount" placeholder="e.g. 200">
 
-    <input type="text" id="desc" placeholder="Enter item name">
-    <input type="number" id="amount" placeholder="Enter amount">
+  <label>Category:</label>
+  <input type="text" id="category" placeholder="e.g. Food">
 
-    <button onclick="addExpense()">Add Expense</button>
+  <button onclick="addExpense()">Add Expense</button>
 
-    <div id="output"></div>
-    <h3 id="total"></h3>
-    <h3 id="max"></h3>
-  </div>
+  <div id="expense-list"></div>
+  <h3 id="total"></h3>
+  <h3 id="highest"></h3>
 
-  <!-- JS link -->
-  <script src="./app.js"></script>
+  <script>
+    let expenses = [];
 
+    function addExpense() {
+      let amount = parseFloat(document.getElementById("amount").value);
+      let category = document.getElementById("category").value;
+
+      if (amount && category) {
+        expenses.push({ amount, category });
+        document.getElementById("amount").value = "";
+        document.getElementById("category").value = "";
+        showExpenses();
+      } else {
+        alert("Please enter both amount and category!");
+      }
+    }
+
+    function removeExpense(index) {
+      if (index >= 0 && index < expenses.length) {
+        expenses.splice(index, 1);
+        showExpenses();
+      }
+    }
+
+    function getTotal() {
+      return expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    }
+
+    function getMax() {
+      if (expenses.length === 0) return null;
+      return expenses.reduce((max, exp) => exp.amount > max.amount ? exp : max);
+    }
+
+    function showExpenses() {
+      let listDiv = document.getElementById("expense-list");
+      listDiv.innerHTML = "<h3>Your Expenses:</h3>";
+
+      expenses.forEach((exp, index) => {
+        listDiv.innerHTML += `
+          <p class="expense-item">
+            ${exp.category}: ₹${exp.amount}
+            <button onclick="removeExpense(${index})">Remove</button>
+          </p>`;
+      });
+
+      document.getElementById("total").innerText = "Total Spent: ₹" + getTotal();
+
+      let highest = getMax();
+      if (highest) {
+        document.getElementById("highest").innerHTML =
+          "Highest Expense: <span class='highest'>" + highest.category + " - ₹" + highest.amount + "</span>";
+      } else {
+        document.getElementById("highest").innerText = "";
+      }
+    }
+  </script>
 </body>
 </html>
