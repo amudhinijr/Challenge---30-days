@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Expense Manager</title>
+  <title>Food Expense Manager</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,7 +23,7 @@
       margin: 5px 0;
     }
     .highest {
-      color: red;
+      color: green;
       font-weight: bold;
     }
   </style>
@@ -31,11 +31,11 @@
 <body>
   <h2>Expense Manager</h2>
 
-  <label>Amount:</label>
-  <input type="number" id="amount" placeholder="e.g. 200">
-
-  <label>Category:</label>
+  <label>Food Category:</label>
   <input type="text" id="category" placeholder="e.g. Food">
+
+  <label>Actual Amount:</label>
+  <input type="number" id="amount" placeholder="e.g. 200">
 
   <button onclick="addExpense()">Add Expense</button>
 
@@ -56,7 +56,7 @@
         document.getElementById("category").value = "";
         showExpenses();
       } else {
-        alert("Please enter both amount and category!");
+        alert("Enter both amount and category!");
       }
     }
 
