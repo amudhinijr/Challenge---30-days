@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Day 2 - Expense Manager with Utilities</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .container { max-width: 400px; margin: auto; }
+    input, button { margin: 5px 0; padding: 8px; }
+    ul { list-style: none; padding: 0; }
+    li { background: #f2f2f2; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; }
+    .stats { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Expense Manager</h1>
+    <input id="amount" type="number" placeholder="Enter amount">
+    <input id="category" type="text" placeholder="Enter category">
+    <button onclick="addExpense()">Add Expense</button>
+    <ul id="expenseList"></ul>
+    <div class="stats">
+      <p>Total Spent: <span id="total">0</span></p>
+      <p>Highest Expense: <span id="highest">0</span></p>
+    </div>
+    <div>
+      <h3>Filter by Category</h3>
+      <input id="filterCategory" type="text" placeholder="Enter category">
+      <button onclick="applyFilter()">Filter</button>
+      <ul id="filteredList"></ul>
+    </div>
+  </div>
+
+  <script>
+    let expenses = [];
+
+    // Utility Functions
+    function getTotal(expensesArray) {
+      return expensesArray.reduce((sum, exp) => sum + exp.amount, 0);
+    }
+
+    function getMax(expensesArray) {
+      if (expensesArray.length === 0) return 0;
+      return Math.max(...expensesArray.map(exp => exp.amount));
+    }
+
+    function filterByCategory(expensesArray, category) {
+      return expensesArray.filter(exp => exp.category.toLowerCase() === category.toLowerCase());
+    }
+
+    // Main Functions
+    function addExpense() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const category = document.getElementById('category').value;
+
+      if (!amount || !category) {
+        alert("Please enter both amount and category!");
+        return;
+      }
+
+      expenses.push({ amount, category });
+      document.getElementById('amount').value = "";
+      document.getElementById('category').value = "";
+
+      renderExpenses();
+      updateStats();
+    }
+
+    function removeExpense(index) {
+      expenses.splice(index, 1);
+      renderExpenses();
+      updateStats();
+    }
+
+    function renderExpenses() {
+      const list = document.getElementById('expenseList');
+      list.innerHTML = "";
+      expenses.forEach((exp, i) => {
+        list.innerHTML += `<li>${exp.category}: ₹${exp.amount} 
+          <button onclick="removeExpense(${i})">Remove</button></li>`;
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('total').innerText = getTotal(expenses);
+      document.getElementById('highest').innerText = getMax(expenses);
+    }
+
+    function applyFilter() {
+      const category = document.getElementById('filterCategory').value;
+      const filtered = filterByCategory(expenses, category);
+
+      const list = document.getElementById('filteredList');
+      list.innerHTML = "";
+      filtered.forEach(exp => {
+        list.innerHTML += `<li>${exp.category}: ₹${exp.amount}</li>`;
+      });
+    }
+  </script>
+</body>
+</html>
