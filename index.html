@@ -2,101 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Expense Manager</title>
+  <title>Day 1 - Expense Manager</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
     }
-    h2 {
+    h1 {
       color: #333;
     }
+    .container {
+      max-width: 400px;
+      margin: auto;
+    }
     input, button {
-      margin: 5px;
+      margin: 6px 0;
       padding: 8px;
     }
-    #expense-list {
-      margin-top: 20px;
+    ul {
+      list-style: none;
+      padding: 0;
     }
-    .expense-item {
+    li {
+      background: #f2f2f2;
       margin: 5px 0;
+      padding: 8px;
+      display: flex;
+      justify-content: space-between;
     }
-    .highest {
-      color: green;
+    .stats {
+      margin-top: 18px;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>Expense Manager</h2>
-
-  <label>Food Category:</label>
-  <input type="text" id="category" placeholder="e.g. Food">
-
-  <label>Actual Amount:</label>
-  <input type="number" id="amount" placeholder="e.g. 200">
-
-  <button onclick="addExpense()">Add Expense</button>
-
-  <div id="expense-list"></div>
-  <h3 id="total"></h3>
-  <h3 id="highest"></h3>
+  <div class="container">
+    <h1> Daily Expense Manager </h1>
+    <input id="amount" type="number" placeholder="Enter amount">
+    <input id="category" type="text" placeholder="Enter category">
+    <button onclick="addExpense()">Add Expense</button>
+    <ul id="expenseList"></ul>
+    <div class="stats">
+      <p>Total Spent: <span id="total">0</span></p>
+      <p>Highest Expense: <span id="highest">0</span></p>
+    </div>
+  </div>
 
   <script>
+    // Store expenses in an array
     let expenses = [];
 
     function addExpense() {
-      let amount = parseFloat(document.getElementById("amount").value);
-      let category = document.getElementById("category").value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const category = document.getElementById('category').value;
 
-      if (amount && category) {
-        expenses.push({ amount, category });
-        document.getElementById("amount").value = "";
-        document.getElementById("category").value = "";
-        showExpenses();
-      } else {
-        alert("Enter both amount and category!");
+      if (!amount || !category) {
+        alert("Please enter both amount and category!");
+        return;
       }
+
+      // Add expense object to array
+      expenses.push({ amount, category });
+      document.getElementById('amount').value = "";
+      document.getElementById('category').value = "";
+
+      renderExpenses();
+      updateStats();
     }
 
     function removeExpense(index) {
-      if (index >= 0 && index < expenses.length) {
-        expenses.splice(index, 1);
-        showExpenses();
-      }
+      expenses.splice(index, 1); // remove one item at position index
+      renderExpenses();
+      updateStats();
     }
 
-    function getTotal() {
-      return expenses.reduce((sum, exp) => sum + exp.amount, 0);
-    }
-
-    function getMax() {
-      if (expenses.length === 0) return null;
-      return expenses.reduce((max, exp) => exp.amount > max.amount ? exp : max);
-    }
-
-    function showExpenses() {
-      let listDiv = document.getElementById("expense-list");
-      listDiv.innerHTML = "<h3>Your Expenses:</h3>";
-
-      expenses.forEach((exp, index) => {
-        listDiv.innerHTML += `
-          <p class="expense-item">
-            ${exp.category}: ₹${exp.amount}
-            <button onclick="removeExpense(${index})">Remove</button>
-          </p>`;
+    function renderExpenses() {
+      const list = document.getElementById('expenseList');
+      list.innerHTML = "";
+      expenses.forEach((exp, i) => {
+        list.innerHTML += `<li>${exp.category}: ₹${exp.amount} 
+          <button onclick="removeExpense(${i})">Remove</button></li>`;
       });
+    }
 
-      document.getElementById("total").innerText = "Total Spent: ₹" + getTotal();
+    function updateStats() {
+      let total = 0;
+      let highest = 0;
 
-      let highest = getMax();
-      if (highest) {
-        document.getElementById("highest").innerHTML =
-          "Highest Expense: <span class='highest'>" + highest.category + " - ₹" + highest.amount + "</span>";
-      } else {
-        document.getElementById("highest").innerText = "";
+      for (let exp of expenses) {
+        total += exp.amount;
+        if (exp.amount > highest) {
+          highest = exp.amount;
+        }
       }
+
+      document.getElementById('total').innerText = total;
+      document.getElementById('highest').innerText = highest;
     }
   </script>
 </body>
