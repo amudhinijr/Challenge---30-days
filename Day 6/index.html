@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Day 6 - Top Categories</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .container { max-width: 500px; margin: auto; }
+    input, button { margin: 5px 0; padding: 8px; }
+    ul { list-style: none; padding: 0; }
+    li { background: #f2f2f2; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; }
+    .stats { margin-top: 15px; font-weight: bold; }
+    .top-categories { margin-top: 20px; background: #eef; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Expense Manager</h1>
+    <input id="amount" type="number" placeholder="Enter amount">
+    <input id="category" type="text" placeholder="Enter category">
+    <button onclick="addExpense()">Add Expense</button>
+    <ul id="expenseList"></ul>
+    <div class="stats">
+      <p>Total Spent: <span id="total">0</span></p>
+      <p>Highest Expense: <span id="highest">0</span></p>
+    </div>
+    <div class="top-categories">
+      <h3>Top 3 Categories</h3>
+      <ul id="topList"></ul>
+    </div>
+  </div>
+
+  <script>
+    let expenses = [];
+
+    function addExpense() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const category = document.getElementById('category').value;
+
+      if (!amount || !category) {
+        alert("Please enter both amount and category!");
+        return;
+      }
+
+      expenses.push({ amount, category });
+      document.getElementById('amount').value = "";
+      document.getElementById('category').value = "";
+
+      renderExpenses();
+      updateStats();
+      showTopCategories();
+    }
+
+    function removeExpense(index) {
+      expenses.splice(index, 1);
+      renderExpenses();
+      updateStats();
+      showTopCategories();
+    }
+
+    function renderExpenses() {
+      const list = document.getElementById('expenseList');
+      list.innerHTML = "";
+      expenses.forEach((exp, i) => {
+        list.innerHTML += `<li>${exp.category}: ₹${exp.amount} 
+          <button onclick="removeExpense(${i})">Remove</button></li>`;
+      });
+    }
+
+    function getTotal(expensesArray) {
+      return expensesArray.reduce((sum, exp) => sum + exp.amount, 0);
+    }
+
+    function getMax(expensesArray) {
+      if (expensesArray.length === 0) return 0;
+      return Math.max(...expensesArray.map(exp => exp.amount));
+    }
+
+    function updateStats() {
+      document.getElementById('total').innerText = getTotal(expenses);
+      document.getElementById('highest').innerText = getMax(expenses);
+    }
+
+    // Day 6: Top 3 Categories
+    function showTopCategories() {
+      const categoryTotals = {};
+
+      // Step 1: Count totals per category
+      expenses.forEach(exp => {
+        if (!categoryTotals[exp.category]) {
+          categoryTotals[exp.category] = 0;
+        }
+        categoryTotals[exp.category] += exp.amount;
+      });
+
+      // Step 2: Convert to array and sort
+      const sorted = Object.entries(categoryTotals)
+        .sort((a, b) => b[1] - a[1]); // sort by total descending
+
+      // Step 3: Take top 3
+      const top3 = sorted.slice(0, 3);
+
+      // Step 4: Render
+      const list = document.getElementById('topList');
+      list.innerHTML = "";
+      top3.forEach(([category, total]) => {
+        list.innerHTML += `<li>${category}: ₹${total}</li>`;
+      });
+    }
+  </script>
+</body>
+</html>
