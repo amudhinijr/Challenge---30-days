@@ -50,7 +50,7 @@
   </div>
 
   <script>
-    // Store expenses in an array
+  
     let expenses = [];
 
     function addExpense() {
@@ -62,7 +62,7 @@
         return;
       }
 
-      // Add expense object to array
+      
       expenses.push({ amount, category });
       document.getElementById('amount').value = "";
       document.getElementById('category').value = "";
@@ -72,7 +72,7 @@
     }
 
     function removeExpense(index) {
-      expenses.splice(index, 1); // remove one item at position index
+      expenses.splice(index, 1); 
       renderExpenses();
       updateStats();
     }
